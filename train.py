@@ -6,10 +6,7 @@ from src.model.transformer import build_decoder_only_transformer
 
 preprocessor = M4TransformerPreprocessor(context_length=48, horizon=18)
 dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
-preprocessor.dataset = dataset[:100]  # TEMPORAR 
-
 X_train, y_train = preprocessor.get_training_data()
-
 model = build_decoder_only_transformer()
 
 model.compile(
