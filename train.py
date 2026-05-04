@@ -9,8 +9,16 @@ dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
 
 preprocessor.dataset = dataset[:5000] # LIMITA PENTRU COLAB
 
-X_train, y_train = preprocessor.get_training_data()
-X_val, y_val = preprocessor.get_validation_data()
+X_train_full, y_train_full = preprocessor.get_training_data()
+# X_val, y_val = preprocessor.get_validation_data()
+
+split_idx = int(len(X_train_full) * 0.8)
+
+X_train = X_train_full[:split_idx]
+y_train = y_train_full[:split_idx]
+X_val_fit = X_train_full[split_idx:]
+y_val_fit = y_train_full[split_idx:]
+
 model = build_decoder_only_transformer()
 
 model.compile(
@@ -35,7 +43,7 @@ early_stop = EarlyStopping(
 
 history = model.fit(
     X_train, y_train,
-    validation_data=(X_val, y_val),
+    validation_data=(X_val_fit, y_val_fit),
     epochs=50,
     batch_size=64,
     callbacks=[checkpoint, early_stop]
