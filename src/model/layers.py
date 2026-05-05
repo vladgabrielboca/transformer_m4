@@ -1,8 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import layers
 
-from tensorflow.python.keras.layers import Dense
-
 class DecoderBlock(layers.Layer):
     def __init__(self, hidden_dim, intermediate_dim, num_heads, dropout_rate=0.1, **kwargs):
         super().__init__(**kwargs)

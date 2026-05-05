@@ -2,7 +2,7 @@ import numpy as np
 from tensorflow import keras
 from src.preprocessing import M4TransformerPreprocessor
 
-from src.model.transformer import PositionalEmbedding
+from src.model.embedding import PositionalEmbedding
 from src.model.layers import DecoderBlock
 
 def denormalize_forecast(preds, mean, std):
