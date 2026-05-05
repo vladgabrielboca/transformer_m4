@@ -6,12 +6,6 @@ from src.preprocessing import M4TransformerPreprocessor
 from src.model.embedding import PositionalEmbedding
 from src.model.layers import DecoderBlock
 
-preprocessor = M4TransformerPreprocessor(context_length=48, horizon=18)
-dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
-
-X_train, y_train = preprocessor.get_training_data()
-X_val, y_val = preprocessor.get_validation_data()
-
 def build_decoder_only_transformer(
     context_length=48,
     hidden_dim=64,
