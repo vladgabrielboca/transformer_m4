@@ -1,4 +1,5 @@
 import numpy as np
+from tqdm import tqdm
 from tensorflow import keras
 from src.preprocessing import M4TransformerPreprocessor
 
@@ -99,7 +100,7 @@ model = keras.models.load_model(
 all_forecasts = []
 all_targets = []
 
-for i in range(len(X_val)):
+for i in tqdm(range(len(X_val)), desc="Predicting"):
     preds_norm = autoregressive_forecast(model, X_val[i], horizon=18)
 
     mean, std = preprocessor.val_stats[i]
