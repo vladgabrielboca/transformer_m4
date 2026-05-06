@@ -83,7 +83,7 @@ def autoregressive_forecast(model, history_window, horizon):
 preprocessor = M4TransformerPreprocessor(context_length=48, horizon=18)
 dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
 
-preprocessor.dataset = dataset[:100]
+preprocessor.dataset = dataset[:5000]
 
 X_val, y_val = preprocessor.get_validation_data()
 stats = preprocessor.val_stats
