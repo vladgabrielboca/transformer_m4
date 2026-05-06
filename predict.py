@@ -61,7 +61,7 @@ def autoregressive_forecast_batch(model, X_val, val_stats, horizon=18, batch_siz
     window = X_val.astype(np.float32).copy()
     preds_norm = []
     
-    for step in range(horizon):
+    for step in tqdm(range(horizon), desc="Predicting"):
         pred_seq = model.predict(window, batch_size=batch_size, verbose=0)
         next_values = pred_seq[:, -1, 0]
         preds_norm.append(next_values)
