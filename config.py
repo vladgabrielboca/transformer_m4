@@ -1,5 +1,5 @@
 # Data parameters
-CONTEXT_LENGTH = 48
+CONTEXT_LENGTH = 72
 HORIZON = 18
 MAX_SERIES = 5000  # None for all available series
 
