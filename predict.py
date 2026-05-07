@@ -5,7 +5,7 @@ from src.preprocessing import M4TransformerPreprocessor
 
 from config import (
     CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
-    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH
+    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH, PREDICT_BATCH_SIZE
 )
 
 from src.model.embedding import PositionalEmbedding
@@ -62,7 +62,7 @@ def seasonal_naive_forecast_from_validation(X_val, val_stats, horizon=18, season
 
     return np.asarray(forecasts, dtype=np.float32)
 
-def autoregressive_forecast_batch(model, X_val, val_stats, horizon=18, batch_size=512):
+def autoregressive_forecast_batch(model, X_val, val_stats, horizon=18, batch_size=PREDICT_BATCH_SIZE):
     window = X_val.astype(np.float32).copy()
     preds_norm = []
     
@@ -82,15 +82,18 @@ def autoregressive_forecast_batch(model, X_val, val_stats, horizon=18, batch_siz
     return preds_raw
 
 if __name__ == "__main__":
-    preprocessor = M4TransformerPreprocessor(context_length=48, horizon=18)
-    dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
-
-    preprocessor.dataset = dataset[:5000]
+    preprocessor = M4TransformerPreprocessor(context_length=CONTEXT_LENGTH, horizon=HORIZON)
+    dataset = preprocessor.load_from_csv(TRAIN_CSV_PATH)
+    
+    if MAX_SERIES is not None:
+        preprocessor.dataset = dataset[:MAX_SERIES]
+    else:
+        preprocessor.dataset = dataset
 
     X_val, y_val = preprocessor.get_validation_data()
 
-    model = keras.models.load_model(
-        "transformer_best_weights.keras",
+    model = load_model(
+        MODEL_SAVE_PATH,
         custom_objects={
             "PositionalEmbedding": PositionalEmbedding,
             "DecoderBlock": DecoderBlock
@@ -101,12 +104,12 @@ if __name__ == "__main__":
         model=model,
         X_val=X_val,
         val_stats=preprocessor.val_stats,
-        horizon=18,
-        batch_size=512
+        horizon=HORIZON,
+        batch_size=PREDICT_BATCH_SIZE
     )
 
-    naive_preds = naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=18)
-    seasonal_naive_preds = seasonal_naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=18, seasonality=12)
+    naive_preds = naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=HORIZON)
+    seasonal_naive_preds = seasonal_naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=HORIZON, seasonality=12)
 
     metrics_naive = compute_metrics(y_val, naive_preds)
     metrics_snaive = compute_metrics(y_val, seasonal_naive_preds)
