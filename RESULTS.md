@@ -11,7 +11,7 @@
 
 | Experiment | context_length | MAE | RMSE | sMAPE (%) | Model File | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 1** | 48 | 524.69 | 1352.66 | 10.11 | `transformer_ctx48.keras` | First test, beats baselines. |
+| **Exp 1** | 48 | 524.69 | 1352.66 | 10.11 | `transformer_ctx48_best.keras` | First test, beats baselines. |
 | **Exp 2** | 72 | - | - | - | `transformer_ctx72_best.keras` | To be run |
 | **Exp 3** | 96 | - | - | - | `transformer_ctx96_best.keras` | To be run |
 
