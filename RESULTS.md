@@ -7,7 +7,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Exp 1** | 48 | 524.69 | 1352.66 | 10.11 | `transformer_ctx48_best.keras` | Beats baselines (Naive: 11.69%, S.Naive: 11.22%). |
 | **Exp 2** | 72 | 556.89 | 1397.98 | 10.49 | `transformer_ctx72_best.keras` | Beats baselines (Naive: 11.64%, S.Naive: 11.11%). Worse than Exp 1. |
-| **Exp 3** | 96 | - | - | - | `transformer_ctx96_best.keras` | To be run |
+| **Exp 3** | 96 | 592.39 | 1503.89 | 11.16 | `transformer_ctx96_best.keras` | Degrades further. MAE is worse than baselines. |
 
 ---
 
