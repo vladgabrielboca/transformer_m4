@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     X_val, y_val = preprocessor.get_validation_data()
 
-    model = load_model(
+    model = keras.models.load_model(
         MODEL_SAVE_PATH,
         custom_objects={
             "PositionalEmbedding": PositionalEmbedding,
