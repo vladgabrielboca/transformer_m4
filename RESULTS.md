@@ -17,4 +17,5 @@
 | Experiment | Architecture (dimensions) | MAE | RMSE | sMAPE (%) | Model File | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Exp 4** | `hidden=128`, `inter=256`, `layers=3` | 691.40 | 1606.96 | 12.71 | `transformer_cap1_best.keras` | Even worse |
-| **Exp 5** | `hidden=128`, `inter=256`, `layers=4` | - | - | - | `transformer_cap2_best.keras` | - |
+| **Exp 5** | `hidden=128`, `inter=256`, `layers=4` | 561.98 | 1407.50 | 10.66 | `transformer_cap2_best.keras` | Better, beats baseline, still worse than first config: h64, context 48: sMAPE 10.1148
+h128, context 48: sMAPE 10.6660 |
