@@ -2,17 +2,22 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+from config import (
+    CONTEXT_LENGTH, HIDDEN_DIM, INTERMEDIATE_DIM, 
+    NUM_HEADS, NUM_LAYERS, DROPOUT_RATE
+)
+
 from src.preprocessing import M4TransformerPreprocessor
 from src.model.embedding import PositionalEmbedding
 from src.model.layers import DecoderBlock
 
 def build_decoder_only_transformer(
-    context_length=48,
-    hidden_dim=64,
-    intermediate_dim=128,
-    num_heads=4,
-    num_layers=3,
-    dropout_rate=0.1
+    context_length=CONTEXT_LENGTH,
+    hidden_dim=HIDDEN_DIM,
+    intermediate_dim=INTERMEDIATE_DIM,
+    num_heads=NUM_HEADS,
+    num_layers=NUM_LAYERS,
+    dropout_rate=DROPOUT_RATE
 ):
     inputs = keras.Input(shape=(context_length, 1))
 
