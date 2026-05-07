@@ -10,7 +10,6 @@ dataset = preprocessor.load_from_csv('./data/Monthly-train.csv')
 preprocessor.dataset = dataset[:5000] # LIMITA PENTRU COLAB
 
 X_train_full, y_train_full = preprocessor.get_training_data()
-# X_val, y_val = preprocessor.get_validation_data()
 
 split_idx = int(len(X_train_full) * 0.8)
 
