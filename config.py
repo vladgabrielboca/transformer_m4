@@ -10,8 +10,9 @@ NUM_HEADS = 4
 NUM_LAYERS = 3
 DROPOUT_RATE = 0.1
 
-# Training parameters
-BATCH_SIZE = 128   
+# Training / Inference parameters
+BATCH_SIZE = 128
+PREDICT_BATCH_SIZE = 512
 EPOCHS = 50
 LEARNING_RATE = 1e-3
 
