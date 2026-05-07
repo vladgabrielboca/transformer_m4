@@ -18,4 +18,4 @@ LEARNING_RATE = 1e-3
 
 # File paths
 TRAIN_CSV_PATH = "./data/Monthly-train.csv"
-MODEL_SAVE_PATH = "transformer_ctx48_h128_L3_best.keras"
+MODEL_SAVE_PATH = f"transformer_ctx{CONTEXT_LENGTH}_h{HIDDEN_DIM}_L{NUM_LAYERS}_best.keras"
