@@ -1,6 +1,6 @@
 # Experiments Log - Transformer Model (M4 Dataset)
 
-## Baselines (Reference)
+## Baselines (Reference) - 5000 series
 * **Naive:** MAE = 582.0540, RMSE = 1507.3871, sMAPE = 11.69%
 * **Seasonal Naive:** MAE = 582.1258, RMSE = 1589.1410, sMAPE = 11.22%
 
