@@ -12,7 +12,6 @@
 ---
 
 ## Stage 2: Increasing Model Capacity
-*(TO DO)*
 
 | Experiment | Architecture (dimensions) | MAE | RMSE | sMAPE (%) | Model File | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
