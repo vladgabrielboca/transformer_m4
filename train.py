@@ -3,8 +3,9 @@ from tensorflow import keras
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 from config import (
-    CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
-    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH
+    CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE,
+    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH,
+    HIDDEN_DIM, INTERMEDIATE_DIM, NUM_HEADS, NUM_LAYERS, DROPOUT_RATE
 )
 
 from src.preprocessing import M4TransformerPreprocessor
@@ -50,7 +51,12 @@ val_ds = (
 )
 
 model = build_decoder_only_transformer(
-    context_length=CONTEXT_LENGTH
+    context_length=CONTEXT_LENGTH,
+    hidden_dim=HIDDEN_DIM,
+    intermediate_dim=INTERMEDIATE_DIM,
+    num_heads=NUM_HEADS,
+    num_layers=NUM_LAYERS,
+    dropout_rate=DROPOUT_RATE
 )
 
 model.compile(
