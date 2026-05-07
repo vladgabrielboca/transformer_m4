@@ -3,6 +3,11 @@ from tqdm import tqdm
 from tensorflow import keras
 from src.preprocessing import M4TransformerPreprocessor
 
+from config import (
+    CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
+    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH
+)
+
 from src.model.embedding import PositionalEmbedding
 from src.model.layers import DecoderBlock
 
