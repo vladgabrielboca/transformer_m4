@@ -16,5 +16,5 @@
 
 | Experiment | Architecture (dimensions) | MAE | RMSE | sMAPE (%) | Model File | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 4** | `hidden=128`, `inter=256`, `layers=3` | 691.40 | 1606.96 | 12.71 | `transformer_cap1_best.keras` | - |
+| **Exp 4** | `hidden=128`, `inter=256`, `layers=3` | 691.40 | 1606.96 | 12.71 | `transformer_cap1_best.keras` | Even worse |
 | **Exp 5** | `hidden=128`, `inter=256`, `layers=4` | - | - | - | `transformer_cap2_best.keras` | - |
