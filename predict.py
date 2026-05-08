@@ -91,7 +91,20 @@ if __name__ == "__main__":
     else:
         preprocessor.dataset = dataset
 
-    X_val, y_val = preprocessor.get_validation_data()
+    train_series, val_series = preprocessor.split_dataset_by_series(
+        val_ratio=SERIES_VAL_RATIO,
+        seed=RANDOM_SEED,
+        dataset=preprocessor.dataset
+    )
+
+    X_val, y_val = preprocessor.get_validation_data(dataset=val_series)
+    val_stats = list(preprocessor.val_stats)
+
+    print(f"Total series folosite din CSV: {len(preprocessor.dataset)}")
+    print(f"Train series (nevazute aici): {len(train_series)}")
+    print(f"Validation/Test series evaluate aici: {len(val_series)}")
+    print(f"X_val: {X_val.shape}")
+    print(f"y_val: {y_val.shape}")
 
     print(f"Model loading from {MODEL_SAVE_PATH}...")
     model = keras.models.load_model(
@@ -102,14 +115,16 @@ if __name__ == "__main__":
         }
     )
     
-    train_series, val_series = preprocessor.split_dataset_by_series(
-        val_ratio=SERIES_VAL_RATIO,
-        seed=RANDOM_SEED,
-        dataset=preprocessor.dataset
+    transformer_preds = autoregressive_forecast_batch(
+        model=model,
+        X_val=X_val,
+        val_stats=val_stats,
+        horizon=HORIZON,
+        batch_size=PREDICT_BATCH_SIZE
     )
 
-    naive_preds = naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=HORIZON)
-    seasonal_naive_preds = seasonal_naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=HORIZON, seasonality=12)
+    naive_preds = naive_forecast_from_validation(X_val, val_stats, horizon=HORIZON)
+    seasonal_naive_preds = seasonal_naive_forecast_from_validation(X_val, val_stats, horizon=HORIZON, seasonality=12)
 
     metrics_naive = compute_metrics(y_val, naive_preds)
     metrics_snaive = compute_metrics(y_val, seasonal_naive_preds)
