@@ -36,7 +36,7 @@ class M4TransformerPreprocessor:
 
         for series in self.dataset:
             series = np.asarray(series, dtype=np.float32)
-            
+
             if len(series) < self.context_length + self.horizon + 1:
                 continue
 
@@ -44,9 +44,11 @@ class M4TransformerPreprocessor:
             train_norm = (series[:-self.horizon] - mean) / std
 
             for start in range(0, len(train_norm) - self.context_length):
-                chunk = train_norm[start : start + self.context_length + 1]
-                X.append(chunk[:-1, None])
-                y.append(chunk[1:, None])
+                x = train_norm[start : start + self.context_length]
+                target = train_norm[start + self.context_length]
+
+                X.append(x[:, None])
+                y.append([target])
 
         return np.asarray(X, dtype=np.float32), np.asarray(y, dtype=np.float32)
 

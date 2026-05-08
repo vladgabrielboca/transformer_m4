@@ -67,11 +67,14 @@ def autoregressive_forecast_batch(model, X_val, val_stats, horizon=18, batch_siz
     preds_norm = []
     
     for step in tqdm(range(horizon), desc="Predicting"):
-        pred_seq = model.predict(window, batch_size=batch_size, verbose=0)
-        next_values = pred_seq[:, -1, 0]
+        pred = model.predict(window, batch_size=batch_size, verbose=0)
+        
+        next_values = pred[:, 0]
         preds_norm.append(next_values)
+
         next_values = next_values[:, None, None]
         window = np.concatenate([window[:, 1:, :], next_values], axis=1)
+        
         print(f"Forecast step {step + 1}/{horizon} done")
         
     preds_norm = np.stack(preds_norm, axis=1)

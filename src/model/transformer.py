@@ -33,6 +33,8 @@ def build_decoder_only_transformer(
 
     x = layers.LayerNormalization(epsilon=1e-6)(x)
 
+    x = layers.Lambda(lambda t: t[:, -1, :])(x)
+
     outputs = layers.Dense(1)(x)
 
     return keras.Model(inputs, outputs, name="decoder_only_ts_transformer")
