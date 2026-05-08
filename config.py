@@ -4,8 +4,8 @@ HORIZON = 18
 MAX_SERIES = 5000  # None for all available series
 
 # Architecture parameters
-HIDDEN_DIM = 128
-INTERMEDIATE_DIM = 256
+HIDDEN_DIM = 64
+INTERMEDIATE_DIM = 128
 NUM_HEADS = 4
 NUM_LAYERS = 3
 DROPOUT_RATE = 0.1
