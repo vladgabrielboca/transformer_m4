@@ -100,9 +100,9 @@ if __name__ == "__main__":
     X_val, y_val = preprocessor.get_validation_data(dataset=val_series)
     val_stats = list(preprocessor.val_stats)
 
-    print(f"Total series folosite din CSV: {len(preprocessor.dataset)}")
-    print(f"Train series (nevazute aici): {len(train_series)}")
-    print(f"Validation/Test series evaluate aici: {len(val_series)}")
+    print(f"Total series used: {len(preprocessor.dataset)}")
+    print(f"Train series (unseen): {len(train_series)}")
+    print(f"Validation/Test series evaluated: {len(val_series)}")
     print(f"X_val: {X_val.shape}")
     print(f"y_val: {y_val.shape}")
 

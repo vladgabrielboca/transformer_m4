@@ -71,13 +71,13 @@ class AutoregressiveValidationCallback(Callback):
             self.wait = 0
             self.best_weights = self.model.get_weights()
             self.model.save(self.save_path)
-            print(f"Epoch {epoch + 1}: model salvat in {self.save_path} (best val_smape_ar)")
+            print(f"Epoch {epoch + 1}: model saved in {self.save_path} (best val_smape_ar)")
         else:
             self.wait += 1
-            print(f"Epoch {epoch + 1}: fara imbunatatire pe val_smape_ar ({self.wait}/{self.patience})")
+            print(f"Epoch {epoch + 1}: no improvement on val_smape_ar ({self.wait}/{self.patience})")
             if self.wait >= self.patience:
                 self.model.stop_training = True
-                print("Early stopping activat pe baza val_smape_ar.")
+                print("Early stopping activated based on val_smape_ar.")
 
     def on_train_end(self, logs=None):
         if self.best_weights is not None:
@@ -110,8 +110,8 @@ X_val_fit, y_val_fit = preprocessor.get_training_data(dataset=val_series)
 X_val_ar, y_val_ar = preprocessor.get_validation_data(dataset=val_series)
 val_stats = list(preprocessor.val_stats)
 
-print("Numar train_series:", len(train_series))
-print("Numar val_series:", len(val_series))
+print("Number of train series:", len(train_series))
+print("Number of validation series:", len(val_series))
 print("X_train:", X_train.shape)
 print("y_train:", y_train.shape)
 print("X_val_fit:", X_val_fit.shape)

@@ -41,7 +41,7 @@ class M4TransformerPreprocessor:
         ]
 
         if len(eligible_series) < 2:
-            raise ValueError("Ai nevoie de cel putin 2 serii eligibile pentru split train/validation.")
+            raise ValueError("At least 2 series needed for train/validation split.")
 
         rng = np.random.default_rng(seed)
         indices = np.arange(len(eligible_series))
