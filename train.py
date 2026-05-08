@@ -121,7 +121,7 @@ print("y_val_ar:", y_val_ar.shape)
 
 train_ds = (
     tf.data.Dataset.from_tensor_slices((X_train, y_train))
-    .shuffle(buffer_size=min(len(X_train), 10000), reshuffle_each_iteration=True)
+    .shuffle(buffer_size=min(len(X_train), 100000), reshuffle_each_iteration=True)
     .batch(BATCH_SIZE)
     .prefetch(tf.data.AUTOTUNE)
 )
