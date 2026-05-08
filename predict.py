@@ -5,7 +5,8 @@ from src.preprocessing import M4TransformerPreprocessor
 
 from config import (
     CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
-    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH, PREDICT_BATCH_SIZE
+    EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH, PREDICT_BATCH_SIZE,
+    SERIES_VAL_RATIO, RANDOM_SEED
 )
 
 from src.model.embedding import PositionalEmbedding
@@ -101,12 +102,10 @@ if __name__ == "__main__":
         }
     )
     
-    transformer_preds = autoregressive_forecast_batch(
-        model=model,
-        X_val=X_val,
-        val_stats=preprocessor.val_stats,
-        horizon=HORIZON,
-        batch_size=PREDICT_BATCH_SIZE
+    train_series, val_series = preprocessor.split_dataset_by_series(
+        val_ratio=SERIES_VAL_RATIO,
+        seed=RANDOM_SEED,
+        dataset=preprocessor.dataset
     )
 
     naive_preds = naive_forecast_from_validation(X_val, preprocessor.val_stats, horizon=HORIZON)
