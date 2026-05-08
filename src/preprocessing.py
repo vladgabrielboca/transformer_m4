@@ -31,10 +31,40 @@ class M4TransformerPreprocessor:
         
         return mean, std
 
-    def get_training_data(self):
+    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None):
+        if dataset is None:
+            dataset = self.dataset
+
+        eligible_series = [
+            series for series in dataset
+            if len(series) >= self.context_length + self.horizon + 1
+        ]
+
+        if len(eligible_series) < 2:
+            raise ValueError("Ai nevoie de cel putin 2 serii eligibile pentru split train/validation.")
+
+        rng = np.random.default_rng(seed)
+        indices = np.arange(len(eligible_series))
+        rng.shuffle(indices)
+
+        val_size = max(1, int(len(eligible_series) * val_ratio))
+        if val_size >= len(eligible_series):
+            val_size = len(eligible_series) - 1
+
+        val_indices = set(indices[:val_size].tolist())
+
+        train_series = [eligible_series[i] for i in range(len(eligible_series)) if i not in val_indices]
+        val_series = [eligible_series[i] for i in range(len(eligible_series)) if i in val_indices]
+
+        return train_series, val_series
+
+    def get_training_data(self, dataset=None):
         X, y = [], []
 
-        for series in self.dataset:
+        if dataset is None:
+            dataset = self.dataset
+
+        for series in dataset:
             series = np.asarray(series, dtype=np.float32)
             
             if len(series) < self.context_length + self.horizon + 1:
@@ -50,11 +80,14 @@ class M4TransformerPreprocessor:
 
         return np.asarray(X, dtype=np.float32), np.asarray(y, dtype=np.float32)
 
-    def get_validation_data(self):
+    def get_validation_data(self, dataset=None):
         X_val, y_val = [], []
         self.val_stats = []
 
-        for series in self.dataset:
+        if dataset is None:
+            dataset = self.dataset
+
+        for series in dataset:
             series = np.asarray(series, dtype=np.float32)
 
             if len(series) < self.context_length + self.horizon:
