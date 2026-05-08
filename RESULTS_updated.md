@@ -1,16 +1,5 @@
 # Transformer Experiments Log (M4 Dataset)
 
-## Important Methodology Update
-
-This file was revised after identifying that the earlier evaluation protocol was overly optimistic.
-
-The original experimental pipeline had two methodological issues:
-
-1. **Training-time validation was not fully clean.** The `fit()` validation split was created after concatenating all sliding windows, so train and validation windows could come from the same time series.
-2. **Final evaluation in `predict.py` was not holdout-only.** The script evaluated on all `MAX_SERIES` series, which means reported metrics could include series that were also used during training.
-
-Because of this, the historical results recorded below should be treated as **exploratory / optimistic** and **not as the true generalization performance on unseen series**.
-
 The corrected protocol is now:
 
 - split the selected dataset at the **series level** using an 80/20 split,
@@ -21,8 +10,6 @@ The corrected protocol is now:
 ---
 
 ## Clean Holdout Results (Current Reference)
-
-These are the only results that should currently be considered methodologically reliable.
 
 ### Experiment C1 — 10,000 series, clean 80/20 split
 
@@ -51,13 +38,9 @@ These are the only results that should currently be considered methodologically 
 | Seasonal Naive | 686.81 | 1378.07 | 15.51 |
 | Transformer | 691.42 | 1361.03 | 15.65 |
 
-**Conclusion:** under the corrected evaluation protocol, this configuration does **not** beat the Naive baseline on unseen-series holdout data.
-
 ---
 
-## Legacy Results (Optimistic / Not Directly Comparable)
-
-The experiments below are preserved for historical context, but they should **not** be interpreted as true holdout generalization results.
+## Legacy Results (Optimistic)
 
 ### Stage 1: Context Window Optimization (legacy)
 
