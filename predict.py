@@ -101,7 +101,8 @@ if __name__ == "__main__":
         custom_objects={
             "PositionalEmbedding": PositionalEmbedding,
             "DecoderBlock": DecoderBlock
-        }
+        },
+        safe_mode=False
     )
     
     transformer_preds = autoregressive_forecast_batch(
