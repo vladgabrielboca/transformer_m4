@@ -1,7 +1,7 @@
 # Data parameters
 CONTEXT_LENGTH = 48
 HORIZON = 18
-MAX_SERIES = 10000  # None for all available series
+MAX_SERIES = 5000  # None for all available series
 
 # Architecture parameters
 HIDDEN_DIM = 128
