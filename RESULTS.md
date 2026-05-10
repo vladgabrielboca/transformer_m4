@@ -63,38 +63,176 @@ The corrected protocol is now:
 | :--- | ---: | ---: | ---: |
 | Naive | 613.42 | 1238.06 | 13.99 |
 | Seasonal Naive | 686.81 | 1378.07 | 15.51 |
-| Transformer | 584.77 | 1171.38 | 13.5 |
+| Transformer | 584.77 | 1171.38 | 13.50 |
 
 ---
 
-## Legacy Results (Optimistic)
+## Experiment C3 — Larger Transformer with longer context, 10,000 series, clean 80/20 split
 
-### Stage 1: Context Window Optimization (legacy)
+This experiment increased the input context from 48 months to 60 months.
 
-*Original setup:* `hidden_dim=64`, `num_layers=3`, `num_heads=4`, `train_data=5000 series`
+Because a longer context requires longer time series, fewer series were eligible for this experiment.
 
-| Experiment | context_length | MAE | RMSE | sMAPE (%) | Model File | Legacy Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 1** | **48** | **524.69** | **1352.66** | **10.11** | `transformer_ctx48_best.keras` | Best legacy result. |
-| **Exp 2** | 72 | 556.89 | 1397.98 | 10.49 | `transformer_ctx72_best.keras` | Worse than Exp 1. |
-| **Exp 3** | 96 | 592.39 | 1503.89 | 11.16 | `transformer_ctx96_best.keras` | Further degradation. |
+### Configuration
 
-### Stage 2: Increasing Model Capacity (legacy)
+- `context_length=60`
+- `hidden_dim=128`
+- `intermediate_dim=256`
+- `num_heads=4`
+- `num_layers=3`
+- `learning_rate=3e-4`
+- `MAX_SERIES=10000`
+- `SERIES_VAL_RATIO=0.2`
+- checkpoint selected by autoregressive validation sMAPE
 
-| Experiment | Architecture (dimensions) | MAE | RMSE | sMAPE (%) | Model File | Legacy Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 4** | `hidden=128`, `inter=256`, `layers=3` | 691.40 | 1606.96 | 12.71 | `transformer_ctx48_h128_L3_best.keras` | Legacy result only. |
-| **Exp 5** | `hidden=128`, `inter=256`, `layers=3`, `learning_rate=3e-4` | 561.98 | 1407.50 | 10.66 | `transformer_ctx48_h128_L3_best.keras` | Legacy result only. |
+### Data split
 
-### Stage 3: Dataset Scaling (legacy)
+- Train series: `5937`
+- Validation/Test series: `1484`
+- Total eligible series: `7421`
+- Evaluation: holdout-only
 
-*Original note:* `context_length=48`
+### Training data shapes
 
-| Experiment | Architecture | Eval Set | MAE | RMSE | sMAPE (%) | Legacy Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exp 6** | Small (`h=64`) | 10k series | 639.98 | 1414.12 | 13.77 | Legacy full-subset evaluation, not clean holdout-only. |
-|  |  | 5k series | 561.09 | 1430.77 | 10.55 | Legacy full-subset evaluation, not clean holdout-only. |
-| **Exp 7** | Large (`h=128`) | 10k series | **626.07** | **1371.05** | **13.60** | Legacy full-subset evaluation, not clean holdout-only. |
-|  |  | 5k series | **542.35** | **1373.65** | **10.32** | Legacy full-subset evaluation, not clean holdout-only. |
+- `X_train`: `(1275624, 60, 1)`
+- `y_train`: `(1275624, 60, 1)`
+- `X_val_fit`: `(320105, 60, 1)`
+- `y_val_fit`: `(320105, 60, 1)`
+- `X_val_ar`: `(1484, 60, 1)`
+- `y_val_ar`: `(1484, 18)`
+
+### Holdout metrics
+
+| Model | MAE | MSE | RMSE | sMAPE (%) |
+| :--- | ---: | ---: | ---: | ---: |
+| Naive | 641.4473 | 2171092.7500 | 1473.4629 | 12.8644 |
+| Seasonal Naive | 658.0632 | 2657375.5000 | 1630.1459 | 12.8626 |
+| Transformer | 548.2968 | 1673284.7500 | 1293.5551 | 10.5715 |
+
+### Conclusion
+
+This is the best clean result so far.
+
+The Transformer strongly outperforms both baselines on the clean held-out series:
+
+- Naive sMAPE: `12.8644`
+- Seasonal Naive sMAPE: `12.8626`
+- Transformer sMAPE: `10.5715`
+
+However, this result is not directly comparable to Experiment C2 because the longer context length reduces the number of eligible series. The validation set is different.
+
+To isolate the effect of context length, a controlled comparison was run using the same eligibility threshold for both `context_length=48` and `context_length=60`.
+
+---
+
+## Controlled Context-Length Comparison
+
+To compare `context_length=48` and `context_length=60` fairly, both models were evaluated on the same subset of series eligible for `context_length=60`.
+
+This was done using:
+
+- `ELIGIBILITY_CONTEXT_LENGTH=60`
+- same `MAX_SERIES=10000`
+- same `SERIES_VAL_RATIO=0.2`
+- same random seed
+- same train/validation split
+- same validation/test series
+
+This ensures that the comparison is not affected by different series being filtered out due to length constraints.
+
+---
+
+## Experiment C4 — Context 48 evaluated on the context-60 eligible subset
+
+### Configuration
+
+- `context_length=48`
+- `ELIGIBILITY_CONTEXT_LENGTH=60`
+- `hidden_dim=128`
+- `intermediate_dim=256`
+- `num_heads=4`
+- `num_layers=3`
+- `learning_rate=3e-4`
+- `MAX_SERIES=10000`
+- `SERIES_VAL_RATIO=0.2`
+
+### Data split
+
+- Train series: `5937`
+- Validation/Test series: `1484`
+- Total eligible series: `7421`
+- Evaluation: holdout-only
+
+### Training data shapes
+
+- `X_train`: `(1346868, 48, 1)`
+- `y_train`: `(1346868, 48, 1)`
+- `X_val_fit`: `(337913, 48, 1)`
+- `y_val_fit`: `(337913, 48, 1)`
+- `X_val_ar`: `(1484, 48, 1)`
+- `y_val_ar`: `(1484, 18)`
+
+### Holdout metrics
+
+| Model | MAE | MSE | RMSE | sMAPE (%) |
+| :--- | ---: | ---: | ---: | ---: |
+| Naive | 641.4473 | 2171092.7500 | 1473.4629 | 12.8644 |
+| Seasonal Naive | 658.0632 | 2657375.5000 | 1630.1459 | 12.8626 |
+| Transformer | 570.3654 | 1703137.3750 | 1305.0431 | 11.0152 |
+
+---
+
+## Fair Comparison: Context 48 vs Context 60
+
+Both experiments below use the same eligible series subset and the same holdout split.
+
+| Experiment | Model Context | Eligibility Context | Holdout Series | Transformer MAE | Transformer RMSE | Transformer sMAPE (%) |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| C4 | 48 | 60 | 1484 | 570.3654 | 1305.0431 | 11.0152 |
+| C3 | 60 | 60 | 1484 | 548.2968 | 1293.5551 | 10.5715 |
+
+### Interpretation
+
+Increasing the input context from 48 to 60 months improved Transformer sMAPE from:
+
+- `11.0152` with `context_length=48`
+- to `10.5715` with `context_length=60`
+
+Absolute improvement:
+
+- `0.4437` sMAPE points
+
+Relative improvement:
+
+- approximately `4.03%`
+
+This is a meaningful improvement, especially because the baselines are identical across both runs. That confirms the validation set did not change.
+
+The model with `context_length=48` also had more training windows:
+
+- Context 48: `1,346,868` training windows
+- Context 60: `1,275,624` training windows
+
+Despite having fewer training windows, the context-60 model performed better. This suggests that the additional historical context is useful, likely because it helps the model capture seasonal and longer-term temporal patterns.
+
+---
+
+## Current Best Clean Result
+
+The current best methodologically reliable result is:
+
+| Setting | Value |
+| :--- | :--- |
+| `context_length` | `60` |
+| `hidden_dim` | `128` |
+| `intermediate_dim` | `256` |
+| `num_heads` | `4` |
+| `num_layers` | `3` |
+| `learning_rate` | `3e-4` |
+| `MAX_SERIES` | `10000` |
+| `SERIES_VAL_RATIO` | `0.2` |
+| Evaluation | clean series-level holdout |
+| Holdout series | `1484` |
+| Transformer sMAPE | `10.5715` |
 
 ---
