@@ -4,9 +4,9 @@ from tensorflow import keras
 from src.preprocessing import M4TransformerPreprocessor
 
 from config import (
-    CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
+    CONTEXT_LENGTH, ELIGIBILITY_CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE, 
     EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH, PREDICT_BATCH_SIZE,
-    SERIES_VAL_RATIO, RANDOM_SEED
+    SERIES_VAL_RATIO, RANDOM_SEED, ELIGIBILITY_CONTEXT_LENGTH
 )
 
 from src.model.embedding import PositionalEmbedding
@@ -94,8 +94,12 @@ if __name__ == "__main__":
     train_series, val_series = preprocessor.split_dataset_by_series(
         val_ratio=SERIES_VAL_RATIO,
         seed=RANDOM_SEED,
-        dataset=preprocessor.dataset
+        dataset=preprocessor.dataset,
+        eligibility_context_length=ELIGIBILITY_CONTEXT_LENGTH
     )
+
+    print(f"Eligibility context length: {ELIGIBILITY_CONTEXT_LENGTH}")
+    print(f"Model context length: {CONTEXT_LENGTH}")
 
     X_val, y_val = preprocessor.get_validation_data(dataset=val_series)
     val_stats = list(preprocessor.val_stats)
