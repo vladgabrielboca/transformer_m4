@@ -1,9 +1,10 @@
 # Data parameters
-CONTEXT_LENGTH = 60
+CONTEXT_LENGTH = 48
 HORIZON = 18
 MAX_SERIES = 10000  # None for all available series
 SERIES_VAL_RATIO = 0.2
 RANDOM_SEED = 42
+ELIGIBILITY_CONTEXT_LENGTH = 60
 
 # Architecture parameters
 HIDDEN_DIM = 128
