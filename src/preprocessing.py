@@ -31,13 +31,16 @@ class M4TransformerPreprocessor:
         
         return mean, std
 
-    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None):
+    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None, eligibility_context_length=None):
         if dataset is None:
             dataset = self.dataset
 
+        if eligibility_context_length is None:
+            eligibility_context_length = self.context_length
+
         eligible_series = [
             series for series in dataset
-            if len(series) >= self.context_length + self.horizon + 1
+            if len(series) >= eligibility_context_length + self.horizon + 1
         ]
 
         if len(eligible_series) < 2:
