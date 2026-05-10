@@ -7,7 +7,8 @@ from config import (
     CONTEXT_LENGTH, HORIZON, MAX_SERIES, BATCH_SIZE,
     EPOCHS, LEARNING_RATE, TRAIN_CSV_PATH, MODEL_SAVE_PATH,
     HIDDEN_DIM, INTERMEDIATE_DIM, NUM_HEADS, NUM_LAYERS, DROPOUT_RATE,
-    SERIES_VAL_RATIO, RANDOM_SEED, PREDICT_BATCH_SIZE, AUTOREGRESSIVE_PATIENCE
+    SERIES_VAL_RATIO, RANDOM_SEED, PREDICT_BATCH_SIZE, AUTOREGRESSIVE_PATIENCE,
+    ELIGIBILITY_CONTEXT_LENGTH
 )
 
 from src.preprocessing import M4TransformerPreprocessor
@@ -102,8 +103,12 @@ else:
 train_series, val_series = preprocessor.split_dataset_by_series(
     val_ratio=SERIES_VAL_RATIO,
     seed=RANDOM_SEED,
-    dataset=preprocessor.dataset
+    dataset=preprocessor.dataset,
+    eligibility_context_length=ELIGIBILITY_CONTEXT_LENGTH
 )
+
+print("Eligibility context length:", ELIGIBILITY_CONTEXT_LENGTH)
+print("Model context length:", CONTEXT_LENGTH)
 
 X_train, y_train = preprocessor.get_training_data(dataset=train_series)
 X_val_fit, y_val_fit = preprocessor.get_training_data(dataset=val_series)
