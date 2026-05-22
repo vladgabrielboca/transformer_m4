@@ -31,33 +31,26 @@ class M4TransformerPreprocessor:
         
         return mean, std
 
-    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None, eligibility_context_length=None):
+    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None):
         if dataset is None:
             dataset = self.dataset
 
-        if eligibility_context_length is None:
-            eligibility_context_length = self.context_length
-
         eligible_series = [
             series for series in dataset
-            if len(series) >= eligibility_context_length + self.horizon + 1
+            if len(series) >= self.context_length + self.horizon + 1
         ]
 
         if len(eligible_series) < 2:
             raise ValueError("At least 2 series needed for train/validation split.")
 
-        rng = np.random.default_rng(seed)
-        indices = np.arange(len(eligible_series))
-        rng.shuffle(indices)
-
         val_size = max(1, int(len(eligible_series) * val_ratio))
+        
         if val_size >= len(eligible_series):
             val_size = len(eligible_series) - 1
 
-        val_indices = set(indices[:val_size].tolist())
-
-        train_series = [eligible_series[i] for i in range(len(eligible_series)) if i not in val_indices]
-        val_series = [eligible_series[i] for i in range(len(eligible_series)) if i in val_indices]
+        split_idx = len(eligible_series) - val_size
+        train_series = eligible_series[:split_idx]
+        val_series = eligible_series[split_idx:]
 
         return train_series, val_series
 
