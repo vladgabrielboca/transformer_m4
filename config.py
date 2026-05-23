@@ -1,5 +1,5 @@
 # Data parameters
-CONTEXT_LENGTH = 60
+CONTEXT_LENGTH = 72
 HORIZON = 18
 MAX_SERIES = 10000  # None for all available series
 SERIES_VAL_RATIO = 0.2
