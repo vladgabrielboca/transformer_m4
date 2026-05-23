@@ -1,5 +1,5 @@
 # Data parameters
-CONTEXT_LENGTH = 72
+CONTEXT_LENGTH = 60
 HORIZON = 18
 MAX_SERIES = 10000  # None for all available series
 SERIES_VAL_RATIO = 0.2
@@ -9,7 +9,7 @@ RANDOM_SEED = 42
 HIDDEN_DIM = 128
 INTERMEDIATE_DIM = 256
 NUM_HEADS = 4
-NUM_LAYERS = 3
+NUM_LAYERS = 1
 DROPOUT_RATE = 0.1
 
 # Training / Inference parameters
@@ -41,7 +41,6 @@ RUN_NAME = (
     f"_lr{format_float_for_name(LEARNING_RATE)}"
     f"_bs{BATCH_SIZE}"
     f"_n{DATASET_TAG}"
-    f"_seqsplit{int((1 - SERIES_VAL_RATIO) * 100)}_{int(SERIES_VAL_RATIO * 100)}"
 )
 
 MODEL_DIR = "models"
