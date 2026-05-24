@@ -98,3 +98,61 @@ class M4TransformerPreprocessor:
             self.val_stats.append((mean, std))
 
         return np.asarray(X_val, dtype=np.float32), np.asarray(y_val, dtype=np.float32)
+    
+    
+    def load_from_csv_with_ids(self, file_path):
+        series_dict = {}
+
+        with open(file_path, 'r') as csvfile:
+            csv_reader = csv.reader(csvfile)
+            next(csv_reader)
+
+            for row in csv_reader:
+                series_id = row[0]
+                numeric_values = [float(v) for v in row[1:] if v]
+                series_dict[series_id] = numeric_values
+
+        return series_dict
+
+
+    def get_official_test_data(self, train_dict, test_dict):
+        X_test, y_test = [], []
+        self.val_stats = []
+
+        skipped_short_history = 0
+        skipped_missing_test = 0
+
+        for series_id, history in train_dict.items():
+            if series_id not in test_dict:
+                skipped_missing_test += 1
+                continue
+
+            history = np.asarray(history, dtype=np.float32)
+            future = np.asarray(test_dict[series_id], dtype=np.float32)
+
+            if len(history) < self.context_length:
+                skipped_short_history += 1
+                continue
+
+            if len(future) < self.horizon:
+                continue
+
+            mean = history.mean()
+            std = history.std()
+
+            if std < 1e-8:
+                std = 1.0
+
+            context = history[-self.context_length:]
+            context_norm = (context - mean) / std
+
+            X_test.append(context_norm[:, None])
+            y_test.append(future[:self.horizon])
+            self.val_stats.append((mean, std))
+
+        print("Official test data")
+        print("Used series:", len(X_test))
+        print("Skipped short history:", skipped_short_history)
+        print("Skipped missing test:", skipped_missing_test)
+
+        return np.asarray(X_test, dtype=np.float32), np.asarray(y_test, dtype=np.float32)
