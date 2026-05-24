@@ -21,6 +21,7 @@ AUTOREGRESSIVE_PATIENCE = 5
 
 # File paths
 TRAIN_CSV_PATH = "./data/Monthly-train.csv"
+TEST_CSV_PATH = "./data/Monthly-test.csv"
 
 # Model naming and saving
 import os
