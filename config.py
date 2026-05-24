@@ -7,10 +7,10 @@ RANDOM_SEED = 42
 
 # Architecture parameters
 HIDDEN_DIM = 128
-INTERMEDIATE_DIM = 256
+INTERMEDIATE_DIM = 512
 NUM_HEADS = 4
 NUM_LAYERS = 2
-DROPOUT_RATE = 0.2
+DROPOUT_RATE = 0.1
 
 # Training / Inference parameters
 BATCH_SIZE = 256
