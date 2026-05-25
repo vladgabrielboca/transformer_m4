@@ -1,8 +1,6 @@
 from config import *
 import os
 
-# Log-ratio experiment settings.
-# This keeps the winning setup from config.py and changes only the data representation.
 LOG_EPSILON = 1e-6
 LOG_RATIO_CLIP = 5.0
 
