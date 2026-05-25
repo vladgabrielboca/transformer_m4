@@ -1,7 +1,7 @@
 # Data parameters
 CONTEXT_LENGTH = 60
 HORIZON = 18
-MAX_SERIES = None  # None for all available series
+MAX_SERIES = 10000  # None for all available series
 SERIES_VAL_RATIO = 0.2
 RANDOM_SEED = 42
 
