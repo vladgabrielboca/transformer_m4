@@ -97,3 +97,9 @@ Relative sMAPE improvement over Naive: approximately `5.86%`.
 - On the full dataset, `learning_rate=2e-4` performed better than `3e-4`.
 - The final Transformer model beats both Naive and Seasonal Naive on the official test evaluation.
 - The official test result uses only series with at least `60` historical observations; `19` short-history series were skipped.
+---
+
+## Related Experiments
+
+Log-ratio experiments are tracked separately in `experiments/logratio/RESULTS.md`.
+
