@@ -1,3 +1,4 @@
+import numpy as np
 from tensorflow import keras
 
 from experiments.logratio.config import (
@@ -23,6 +24,21 @@ from experiments.logratio.predict_validation import (
 
 from predict_official_test import seasonal_naive_forecast_from_validation
 
+def seasonal_naive_forecast_from_train_dict(train_dict, used_series_ids, horizon=18, seasonality=12):
+    forecasts = []
+
+    for series_id in used_series_ids:
+        history = np.asarray(train_dict[series_id], dtype=np.float32)
+
+        if len(history) < seasonality:
+            forecast = np.repeat(history[-1], horizon)
+        else:
+            seasonal_pattern = history[-seasonality:]
+            forecast = np.tile(seasonal_pattern, int(np.ceil(horizon / seasonality)))[:horizon]
+
+        forecasts.append(forecast)
+
+    return np.asarray(forecasts, dtype=np.float32)
 
 if __name__ == "__main__":
     preprocessor = M4LogRatioPreprocessor(
@@ -39,7 +55,9 @@ if __name__ == "__main__":
         train_dict=train_dict,
         test_dict=test_dict
     )
+
     forecast_anchors = list(preprocessor.forecast_anchors)
+    used_series_ids = list(preprocessor.used_series_ids)
 
     print("Experiment: log-ratio regression")
     print("Model context length:", CONTEXT_LENGTH)
@@ -70,14 +88,19 @@ if __name__ == "__main__":
         horizon=HORIZON
     )
 
-    # Seasonal naive still needs the original normalized-value helper signature,
-    # so use the baseline implementation only for comparability if needed.
-    seasonal_naive_preds = None
+    seasonal_naive_preds = seasonal_naive_forecast_from_train_dict(
+        train_dict=train_dict,
+        used_series_ids=used_series_ids,
+        horizon=HORIZON,
+        seasonality=12
+    )
 
     metrics_naive = compute_metrics(y_test, naive_preds)
+    metrics_snaive = compute_metrics(y_test, seasonal_naive_preds)
     metrics_transformer = compute_metrics(y_test, transformer_preds)
 
     print_metrics("Model: Naive", metrics_naive)
+    print_metrics("Model: Seasonal Naive", metrics_snaive)
     print_metrics("Model: Log-ratio Transformer", metrics_transformer)
 
     if seasonal_naive_preds is not None:
