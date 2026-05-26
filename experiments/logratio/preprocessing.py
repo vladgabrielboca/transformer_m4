@@ -86,6 +86,7 @@ class M4LogRatioPreprocessor:
 
         if dataset is None:
             dataset = self.dataset
+            
 
         for series in dataset:
             series = np.asarray(series, dtype=np.float32)
@@ -137,6 +138,8 @@ class M4LogRatioPreprocessor:
         skipped_short_history = 0
         skipped_missing_test = 0
 
+        self.used_series_ids = []
+
         for series_id, history in train_dict.items():
             if series_id not in test_dict:
                 skipped_missing_test += 1
@@ -161,6 +164,7 @@ class M4LogRatioPreprocessor:
             X_test.append(context_log_ratios[:, None])
             y_test.append(future[:self.horizon])
             self.forecast_anchors.append(float(context[-1]))
+            self.used_series_ids.append(series_id)
 
         print("Official test data")
         print("Used series:", len(X_test))
