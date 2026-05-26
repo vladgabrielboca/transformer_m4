@@ -102,7 +102,3 @@ if __name__ == "__main__":
     print_metrics("Model: Naive", metrics_naive)
     print_metrics("Model: Seasonal Naive", metrics_snaive)
     print_metrics("Model: Log-ratio Transformer", metrics_transformer)
-
-    if seasonal_naive_preds is not None:
-        metrics_snaive = compute_metrics(y_test, seasonal_naive_preds)
-        print_metrics("Model: Seasonal Naive", metrics_snaive)
