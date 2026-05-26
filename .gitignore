@@ -3,3 +3,4 @@ __pycache__/
 *.keras
 data/*.csv
 models/*
+Licenta.code-workspace
