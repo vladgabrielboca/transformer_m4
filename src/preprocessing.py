@@ -31,7 +31,7 @@ class M4TransformerPreprocessor:
         
         return mean, std
 
-    def split_dataset_by_series(self, val_ratio=0.2, seed=42, dataset=None):
+    def split_dataset_by_series(self, val_ratio=0.2, dataset=None):
         if dataset is None:
             dataset = self.dataset
 
