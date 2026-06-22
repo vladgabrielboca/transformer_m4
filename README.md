@@ -28,7 +28,6 @@ A decoder-only Transformer applied to a single channel of values per timestep:
 - `N` × `DecoderBlock` — multi-head self-attention with a causal mask, followed by a feed-forward network, with residual connections and layer normalization.
 - Final `LayerNormalization` and a `Dense(1)` head producing a next-step estimate at each position.
 
-No encoder, no external covariates. The model has ~hundreds of thousands of parameters and trains comfortably on a single mid-range GPU.
 
 ## Project structure
 
